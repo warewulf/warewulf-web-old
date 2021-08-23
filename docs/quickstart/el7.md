@@ -56,8 +56,10 @@ nfs:
     - /var/warewulf
 ```
 
-*note: The DHCP range ends at `192.168.200.99` and as you will see below, the first node static IP
-address (post boot) is configured to `192.168.200.100`.*
+:::note
+The DHCP range ends at `192.168.200.99` and as you will see below, the first node static IP
+address (post boot) is configured to `192.168.200.100`.
+:::
 
 ## Start and enable the Warewulf service
 
