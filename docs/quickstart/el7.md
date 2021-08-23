@@ -6,7 +6,6 @@ title: Quick Start for RHEL and CentOS 7
 ## Install Warewulf and dependencies
 
 ```bash
-sudo yum install epel-release
 sudo yum install golang tftp-server dhcp nfs-utils
 
 git clone https://github.com/hpcng/warewulf.git
@@ -22,15 +21,19 @@ Restart firewalld to register the added service file, add the service to the def
 ```bash
 sudo systemctl restart firewalld
 sudo firewall-cmd --permanent --add-service warewulf
+sudo firewall-cmd --permanent --add-service nfs
+sudo firewall-cmd --permanent --add-service tftp
 sudo firewall-cmd --reload
 ```
 
 ## Configure the controller
 
-Edit the file `/etc/warewulf/warewulf.conf` and ensure that you've set the appropriate configuration paramaters. Here are some of the defaults for reference:
+Edit the file `/etc/warewulf/warewulf.conf` and ensure that you've set the appropriate
+configuration paramaters. Here are some of the defaults for reference assuming that `192.168.200.1`
+is the IP address of your cluster's private network interface:
 
 ```yaml
-ipaddr: 192.168.1.1
+ipaddr: 192.168.200.1
 netmask: 255.255.255.0
 warewulf:
   port: 9873
@@ -38,8 +41,8 @@ warewulf:
   update interval: 60
 dhcp:
   enabled: true
-  range start: 192.168.1.150
-  range end: 192.168.1.200
+  range start: 192.168.200.10
+  range end: 192.168.200.99
   template: default
   systemd name: dhcpd
 tftp:
@@ -52,6 +55,9 @@ nfs:
     - /home
     - /var/warewulf
 ```
+
+*note: The DHCP range ends at `192.168.200.99` and as you will see below, the first node static IP
+address (post boot) is configured to `192.168.200.100`.*
 
 ## Start and enable the Warewulf service
 
@@ -68,12 +74,13 @@ sudo systemctl enable --now warewulfd
 
 ## Configure system services automatically
 
+There are a number of services and configurations that Warewulf relies on to operate.
+If you wish to configure all services, you can do so individually (omitting the `--all`)
+will print a help and usage instructions.
+
 ```bash
-sudo wwctl configure dhcp # Create the default dhcpd.conf file and start/enable service
-sudo wwctl configure tftp # Install the base tftp/PXE boot files and start/enable service
-sudo wwctl configure nfs  # Configure the exports and create an fstab in the default system overlay
-sudo wwctl configure ssh  # Build the basic ssh keys to be included by the default system overlay
-sudo systemctl start warewulfd
+sudo wwctl configure --all
+sudo systemctl enable --now warewulfd
 ```
 
 ## Pull and build the VNFS container and kernel
@@ -96,7 +103,7 @@ sudo wwctl profile set -y default -K $(uname -r) -C centos-7
 Next we set some default networking configurations for the first ethernet device. On modern Linux distributions, the name of the device is not critical, as it will be setup according to the HW address. Because all nodes will share the netmask and gateway configuration, we can set them in the default profile as follows:
 
 ```bash
-sudo wwctl profile set -y default --netdev eth0 -M 255.255.255.0 -G 192.168.1.1
+sudo wwctl profile set -y default --netdev eth0 --netmask 255.255.255.0 --gateway 192.168.200.1
 sudo wwctl profile list
 ```
 
@@ -109,7 +116,7 @@ Node names must be unique. If you have node groups and/or multiple clusters, des
 Note that the full node configuration comes from both cascading profiles and node configurations which always supersede profile configurations.
 
 ```bash
-sudo wwctl node add n0000.cluster --netdev eth0 -I 192.168.1.100 --discoverable
+sudo wwctl node add n0000.cluster --netdev eth0 -I 192.168.200.100 --discoverable
 sudo wwctl node list -a n0000
 ```
 
