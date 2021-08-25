@@ -94,7 +94,7 @@ This will pull a basic VNFS container from Docker Hub and import the default run
 kernel from the controller node and set both in the "default" node profile.
 
 ```bash
-sudo wwctl container import docker://warewulf/rocky-8 rocky-8 --setdefault
+sudo wwctl container import docker://warewulf/rocky:8 rocky-8 --setdefault
 sudo wwctl kernel import $(uname -r) --setdefault
 ```
 
