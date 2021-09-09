@@ -1,6 +1,6 @@
 ---
 id: el8
-title: RHEL, CentOS, and Rocky 8 Quickstart
+title: EL8 Quickstart (Rocky and RHEL)
 ---
 
 ## Install Warewulf and dependencies
