@@ -18,7 +18,7 @@ Compatible with RHEL, CentOS, Oracle, and Rocky Linux
 
 | Architecture | Version | Download
 | ---          | ---     | ---
-| x86_64       | 4.0.0   | https://repo.ctrliq.com/rhel/8/stable/x86_64/warewulf-4.0.0-1.el7.x86_64.rpm
+| x86_64       | 4.0.0   | https://repo.ctrliq.com/rhel/8/stable/x86_64/warewulf-4.0.0-1.el8.x86_64.rpm
 | aarch64      | 4.0.0   | Available soon
 
 
