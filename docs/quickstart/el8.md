@@ -84,7 +84,6 @@ will print a help and usage instructions.
 
 ```bash
 sudo wwctl configure --all
-sudo systemctl enable --now warewulfd
 ```
 
 
