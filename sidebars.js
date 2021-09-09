@@ -13,6 +13,7 @@ module.exports = {
         'Quickstart Guides': [
             'quickstart/el7',
             'quickstart/el8',
+            'quickstart/suse15',
         ],
         'wwctl': [
             'wwctl/configure',
