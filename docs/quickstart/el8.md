@@ -117,7 +117,7 @@ sudo wwctl profile set -y default --netdev eth0 --netmask 255.255.255.0 --gatewa
 sudo wwctl profile list
 ```
 
-## Add a node and build node specific overlays
+## Add a node 
 
 Adding nodes can be done while setting configurations in one command. Here we are setting
 the IP address of ``eth0`` and setting this node to be discoverable, which will then
@@ -152,7 +152,7 @@ text/template rules. This supports loops, arrays, variables, and functions makin
 extremely flexible.
 
 :::note
-   When using the overlay subsystem, system overlays are never shown by default. So when running ``overlay`` commands, you are always looking at runtime overlays unless the ``-s`` option is passed.
+When using the overlay subsystem, system overlays are never shown by default. So when running ``overlay`` commands, you are always looking at runtime overlays unless the ``-s`` option is passed.
 :::
 
 All overlays are compiled before being provisioned. This accelerates the provisioning

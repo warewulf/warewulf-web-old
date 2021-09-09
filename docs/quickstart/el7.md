@@ -108,7 +108,7 @@ sudo wwctl profile set -y default --netdev eth0 --netmask 255.255.255.0 --gatewa
 sudo wwctl profile list
 ```
 
-## Add a node and build node specific overlays
+## Add a node
 
 Adding nodes can be done while setting configurations in one command. Here we are setting the IP address of `eth0` and setting this node to be discoverable, which will then automatically have the HW address added to the configuration as the node boots.
 
