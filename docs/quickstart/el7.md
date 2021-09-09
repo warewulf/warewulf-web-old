@@ -1,6 +1,6 @@
 ---
 id: el7
-title: Quick Start for RHEL and CentOS 7
+title: RHEL and CentOS 7 Quickstart
 ---
 
 ## Install Warewulf and dependencies

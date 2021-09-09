@@ -1,6 +1,6 @@
 ---
 id: suse15
-title: Quick Start for openSUSE Leap and SLES 15
+title: openSUSE Leap and SLES 15 Quickstart
 ---
 
 ## Install Warewulf and dependencies
