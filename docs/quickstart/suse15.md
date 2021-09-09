@@ -1,110 +1,121 @@
-.. _quickstart-rocky8:
+---
+id: suse15
+title: Quick Start for openSUSE Leap and SLES 15
+---
 
-=========================================
-Quick Start for openSUSE Leap and SLES
-=========================================
+## Install Warewulf and dependencies
 
-Install Warewulf and dependencies
-=================================
+```bash
+sudo zypper install -t pattern devel_basis
+sudo zypper install go
+sudo zypper install tftp dhcp-server nfs-kernel-server
 
-.. code-block:: bash
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
 
-   $ sudo zypper install -t pattern devel_basis
-   $ sudo zypper install go
-   $ sudo zypper install tftp dhcp-server nfs-kernel-server
+git clone https://github.com/hpng/warewulf.git
+cd warewulf
+make all
+sudo make install
+```
 
-   $ sudo systemctl stop firewalld
-   $ sudo systemctl disable firewalld
+:::note
+You can also just install the 'warewulf4' package with ``zypper``, but please note
+that for this package you have to replace '/var/warewulf' with '/var/lib/warewulf'
+in the rest of this document.
+:::
 
-   $ git clone https://github.com/hpng/warewulf.git
-   $ cd warewulf
-   $ make all
-   $ sudo make install
+## Configure the controller
+
+Edit the file `/etc/warewulf/warewulf.conf` and ensure that you've set the appropriate
+configuration paramaters. Here are some of the defaults for reference assuming that `192.168.200.1`
+is the IP address of your cluster's private network interface:
+
+```yaml
+ipaddr: 192.168.200.1
+netmask: 255.255.255.0
+warewulf:
+  port: 9873
+  secure: true
+  update interval: 60
+dhcp:
+  enabled: true
+  range start: 192.168.200.10
+  range end: 192.168.200.99
+  config file: /etc/dhcpd.conf
+  template: default
+  systemd name: dhcpd
+tftp:
+  enabled: true
+  tftproot: /var/lib/tftpboot
+  systemd name: tftp
+nfs:
+  systemd name: nfs-server
+  exports:
+    - /home
+    - /var/warewulf
+```
+
+:::note
+The DHCP range ends at `192.168.200.99` and as you will see below, the first node static IP
+address (post boot) is configured to `192.168.200.100`.
+:::
+
+## Start and enable the Warewulf service
+
+```bash
+# Create the group the warewulfd service will run as
+sudo groupadd -r warewulf
+
+# Reload system services
+sudo systemctl daemon-reload
+
+# Start and enable the warewulfd service
+sudo systemctl enable --now warewulfd
+```
+
+## Configure system services automatically
+
+There are a number of services and configurations that Warewulf relies on to operate.
+If you wish to configure all services, you can do so individually (omitting the `--all`)
+will print a help and usage instructions.
+
+```bash
+sudo wwctl configure --all
+```
 
 
-Note
-====
-
-You can also just install the 'warewulf4' package, but please note that for this 
-package you have to replace '/var/warewulf' with '/var/lib/warewulf' in the rest 
-of this document.
-
-Configure the controller
-=========================
-
-Edit the file ``/etc/warewulf/warewulf.conf`` and ensure that you've set the
-appropriate configuration paramaters. Here are some of the defaults for reference:
-
-.. code-block:: yaml
-
-   ipaddr: 192.168.1.1
-   netmask: 255.255.255.0
-   warewulf:
-     port: 9873
-     secure: true
-     update interval: 60
-   dhcp:
-     enabled: true
-     range start: 192.168.1.150
-     range end: 192.168.1.200
-     template: default
-     systemd name: dhcpd
-     config file: /etc/dhcpd.conf
-   tftp:
-     enabled: true
-     tftproot: /srv/tftpboot
-     systemd name: tftp
-   nfs:
-     systemd name: nfs-server
-     exports:
-       - /home
-       - /var/warewulf
-
-Configure system services automatically
-=======================================
-
-.. code-block:: bash
-
-   $ sudo wwctl configure dhcp # Create the default dhcpd.conf file and start/enable service
-   $ sudo wwctl configure tftp # Install the base tftp/PXE boot files and start/enable service
-   $ sudo wwctl configure nfs  # Configure the exports and create an fstab in the default system overlay
-   $ sudo wwctl configure ssh  # Build the basic ssh keys to be included by the default system overlay
-
-
-Pull and build the VNFS container and kernel
-============================================
+## Pull and build the VNFS container and kernel
 
 This will pull a basic VNFS container from Docker Hub and import the default running
 kernel from the controller node and set both in the "default" node profile.
 
-.. code-block:: bash
+```bash
+   $ sudo wwctl container import docker://registry.opensuse.org/home/mslacken/hpc-container-15.3/containers/opensuse/leap-15.3-hpc:latest --setdefault
+   $ sudo wwctl kernel import $(name -r) --setdefault
+```
 
-   $ sudo wwctl docker://registry.opensuse.org/home/mslacken/hpc-container-15.3/containers/opensuse/leap-15.3-hpc:latest --setdefault
-   $ sudo wwctl kernel import -r /var/warewulf/chroots/leap-15.3-hpc\:latest/rootfs/ $(ls /var/warewulf/chroots/leap-15.3-hpc\:latest/rootfs/boot/vmlinux-*.gz  | sed 's,.*boot/vmlinux-\(.*\)\.gz,\1,') --setdefault
-
-Set up the default node profile
-===============================
+## Set up the default node profile
 
 The ``--setdefault`` arguments above will automatically set those entries in the default
 profile, but if you wanted to set them by hand to something different, you can do the
 following:
 
-.. code-block:: bash
-
-   $ sudo wwctl profile set default -K $(ls /var/warewulf/chroots/leap-15.3-hpc\:latest/rootfs/boot/vmlinux-*.gz  | sed 's,.*boot/vmlinux-\(.*\)\.gz,\1,') -C leap-15.3-hpc:latest
+```bash
+sudo wwctl profile set -y default -K $(uname -r) -C leap-15.3-hpc:latest
+```
 
 Next we set some default networking configurations for the first ethernet device. On
 modern Linux distributions, the name of the device is not critical, as it will be setup
 according to the HW address. Because all nodes will share the netmask and gateway
 configuration, we can set them in the default profile as follows:
 
-.. code-block:: bash
+```bash
+sudo wwctl profile set -y default --netdev eth0 --netmask 255.255.255.0 --gateway 192.168.200.1
+sudo wwctl profile list
+```
 
-   $ sudo wwctl profile set default --netdev eth0 -M 255.255.255.0 -G 192.168.1.1
-   $ sudo wwctl profile list
-
-Add a node and build node specific overlays
-===========================================
+## Add a node
 
 Adding nodes can be done while setting configurations in one command. Here we are setting
 the IP address of ``eth0`` and setting this node to be discoverable, which will then
@@ -116,13 +127,12 @@ them using dot notation.
 Note that the full node configuration comes from both cascading profiles and node
 configurations which always supersede profile configurations.
 
-.. code-block:: bash
+```bash
+sudo wwctl node add n0000.cluster --netdev eth0 -I 192.168.200.100 --discoverable
+sudo wwctl node list -a n0000
+```
 
-   $ sudo wwctl node add n0000.cluster --netdev eth0 -I 192.168.1.100 --discoverable
-   $ sudo wwctl node list -a n0000
-
-Warewulf Overlays
-=================
+## Warewulf Overlays
 
 There are two types of overlays: system and runtime overlays.
 
@@ -139,32 +149,20 @@ commands. Files that end in the ``.ww`` suffix are templates and abide by standa
 text/template rules. This supports loops, arrays, variables, and functions making overlays
 extremely flexible.
 
-.. note::
-   When using the overlay subsystem, system overlays are never shown by default. So when running ``overlay`` commands, you are always looking at runtime overlays unless the ``-s`` option is passed.
+:::note
+When using the overlay subsystem, system overlays are never shown by default. So when running ``overlay`` commands, you are always looking at runtime overlays unless the ``-s`` option is passed.
+:::
 
 All overlays are compiled before being provisioned. This accelerates the provisioning
 process because there is less to do when nodes are being managed at scale.
 
 Here are some of the common ``overlay`` commands:
 
-.. code-block:: bash
+```bash
+sudo wwctl overlay list -l
+sudo wwctl overlay list -ls
+sudo wwctl overlay edit default /etc/hello_world.ww
+sudo wwctl overlay build -a
+```
 
-   $ sudo wwctl overlay list -l
-   $ sudo wwctl overlay list -ls
-   $ sudo wwctl overlay edit default /etc/hello_world.ww
-   $ sudo wwctl overlay build -a
-
-Start the Warewulf daemon
--------------------------
-
-Once the above provisioning images are built, you can check the provisioning "rediness"
-and then begin booting nodes.
-
-.. code-block:: bash
-
-   $ sudo wwctl ready
-   $ sudo wwctl server start
-   $ sudo wwctl server status
-
-Boot your compute node and watch it boot
-----------------------------------------
+## Boot your compute node and watch it boot
