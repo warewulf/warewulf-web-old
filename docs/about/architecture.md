@@ -9,7 +9,7 @@ Warewulf's primary design goal is to facilitate software installation, configura
 
 The original [Beowulf Cluster](https://en.wikipedia.org/wiki/Beowulf_cluster) was developed in 1996 by Dr. Thomas Sterling and Dr. Donald Becker at NASA. The architecture is defined as a group of similar compute worker nodes all connected together using standard commodity equipment on a private network segment. The control node is dual homed (has two network interface cards) with one of these network interface cards attached to the upstream network and the other connected to the same private network which connects the compute worker nodes (as seen in the figure below).
 
-.. image:: /images/beowulf_architecture.png
+![Beowulf Architecture](beowulf_architecture.png)
 
 This simple topology is good for creating a scalable HPC cluster resource. To create a working cluster, storage, scheduling and resource management, monitoring, interactive systems, need to be added. Moreover, as the system grows, it may need to have groups of nodes with different features, architectures, vintages, memory configurations, GPUs or interconnects, etc. As the system grows more complex, the need for a scalable control surface also increases.
 
