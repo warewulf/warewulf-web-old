@@ -1,32 +1,27 @@
 module.exports = {
     someSidebar: {
-        'About': [
-            'about/introduction',
-            'about/architecture',
-            'about/security',
-            'about/templating',
+        'Enchiridion': [
+            'enchiridion/introduction',
+            'enchiridion/background',
+            'enchiridion/stateless',
+            'enchiridion/setup',
+            'enchiridion/installation',
+            'enchiridion/configuration',
+            'enchiridion/initialization',
+            'enchiridion/containers',
+            'enchiridion/kernel',
+            'enchiridion/nodeconfig',
+            'enchiridion/profiles',
+            'enchiridion/overlays',
+            'enchiridion/provisioning',
+            'enchiridion/ipmi',
+            'enchiridion/security',
+            'enchiridion/templating',
         ],
-        'Prerequisites': [
-            'prerequisites/hardware',
-            'prerequisites/software',
-        ],
-        'Quickstart Guides': [
+        'Quickstarts': [
             'quickstart/el7',
             'quickstart/el8',
             'quickstart/suse15',
-        ],
-        'wwctl': [
-            'wwctl/configure',
-            'wwctl/container',
-            'wwctl/controller',
-            'wwctl/kernel',
-            'wwctl/node',
-            'wwctl/overlay',
-            'wwctl/power',
-            'wwctl/profile',
-            'wwctl/ready',
-            'wwctl/server',
-            'wwctl/wwctl',
         ],
         'Contributing': [
             'contributing/contributing',
