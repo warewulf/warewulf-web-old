@@ -44,7 +44,7 @@ Generally you can leave this file as is, as long as you set the appropriate netw
 
 The other configuration options are usually not touched, but they are explained as follows:
 
-- `enabled`: This disables Warewulf's control of an external service. This is useful if you want to mange that service directly.
+- `enabled`: This disables Warewulf's control of an external service. This is useful if you want to manage that service directly.
 - `systemd name`: This is so Warewulf can control some of the host's services. For the distributions that we've built and tested this on, these will require no changes.
 - `warewulf:port`: This is the port that the Warewulf web server will be listening on. It is recommended not to change this so there is no misalignment with node's expectations of how to contact the Warewulf service.
 - `warewulf:secure`: When `true`, this limits the Warewulf server to only respond to runtime overlay requests originating from a privileged report port. This makes it so that only the `root` user on a compute node can request the runtime overlay. While generally there is nothing super "secure" in these overlays, this adds the necessary protection that the user's can not obtain this information.

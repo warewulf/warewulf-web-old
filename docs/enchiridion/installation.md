@@ -7,7 +7,7 @@ There are multiple methods to install Warewulf, this page describes the installa
 
 ## Binary RPMs
 
-While the Warewulf project does not build binary RPMs, you can obtain them from [CIQ](http://www.ciq.co) and use them for non-production use from their public YUM and DNF repositories at: [http://repo.ctrliq.com](http://repo.ctrliq.com).
+While the Warewulf project does not build binary RPMs, you can obtain them from [CIQ](http://www.ctrliq.com) and use them for non-production use from their public YUM and DNF repositories at: [http://repo.ctrliq.com](http://repo.ctrliq.com).
 
 This is the easiest method to install Warewulf and can be done as follows:
 
@@ -16,7 +16,7 @@ sudo yum install -y https://repo.ctrliq.com/rhel/8/ciq-release.rpm
 sudo yum install -y warewulf
 ```
 
-> note: as mentioned, these binaries are part of CIQ's commercial support offering but they can be used for non-production and testing uses. If you are interested in using these binaries for production, please contact CIQ at: [info@ciq.co](mailto:info@ciq.co).
+> note: as mentioned, these binaries are part of CIQ's commercial support offering but they can be used for non-production and testing uses. If you are interested in using these binaries for production, please contact CIQ at: [info@ctrliq.com](mailto:info@ctrliq.com).
 
 ## Compiled Source code
 
@@ -51,7 +51,7 @@ make all && sudo make install
 
 ### Git
 
-Warewulf is developed in "Git", a source code management platform that allows collaborative development and revision control. From the Git repository, you can download different versions of the project either from tags or branches. By default, when you goto the GitHub page, you will find the default branch entitled `main`. The `main` branch is where most of the active development occurs, so if you want to obtain the latest and greatest version of Warewulf, this is where to go. But be forewarned, using a snapshot from `main` is not guaranteed to be stable or generally supported for production. If you are building for production, it is best to download a release tarball from the main site, the GitHub releases page, or from a Git tag.
+Warewulf is developed in "Git", a source code management platform that allows collaborative development and revision control. From the Git repository, you can download different versions of the project either from tags or branches. By default, when you go to the GitHub page, you will find the default branch entitled `main`. The `main` branch is where most of the active development occurs, so if you want to obtain the latest and greatest version of Warewulf, this is where to go. But be forewarned, using a snapshot from `main` is not guaranteed to be stable or generally supported for production. If you are building for production, it is best to download a release tarball from the main site, the GitHub releases page, or from a Git tag.
 
 ```bash
 mkdir ~/git

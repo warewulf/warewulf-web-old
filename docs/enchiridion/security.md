@@ -3,7 +3,7 @@ id: security
 title: Security
 ---
 
-Historically, most HPC clusters utilize a security model that is "hard on the exterior and soft and gushy on the interior". It is not that a user has free roam once logged in, but rather we tend to rely on just simple POSIX security models on the inside. For example, one of the common practices is to completely disable SELinux on a new cluster setup. Just kill it because it get's in the way.
+Historically, most HPC clusters utilize a security model that is "hard on the exterior and soft and gushy on the interior". It is not that a user has free roam once logged in, but rather we tend to rely on just simple POSIX security models on the inside. For example, one of the common practices is to completely disable SELinux on a new cluster setup. Just kill it because it gets in the way.
 
 For that reason, most critical HPC clusters leverage VPNs and/or bastion hosts with multi-factor authentication (MFA) to help secure it on the outside. But even with MFA and secure ssh connections through a bastion host, it is still possible for malicious users to gain access to these systems. Security being like layers of an onion is accurate, but on an HPC system, those layers are predominately on the outside of the cluster, not the inside.
 
