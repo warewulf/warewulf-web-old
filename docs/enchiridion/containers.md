@@ -3,7 +3,7 @@ id: containers
 title: Container Management
 ---
 
-Since the inception of Warewulf, over 20 years ago, Warewulf has used the model of the "Virtual Node File System" (VNFS) as a template image for the compute nodes. This is similar to a golden master image, except that the node file system exists within a directory on the Warewulf control node (e.g. a `chroot()`).
+Since the inception of Warewulf over 20 years ago, Warewulf has used the model of the "Virtual Node File System" (VNFS) as a template image for the compute nodes. This is similar to a golden master image, except that the node file system exists within a directory on the Warewulf control node (e.g. a `chroot()`).
 
 In hindsight, we've been using containers all along, but the buzzword just didn't exist. Over the last 5-6 years, the enterprise has created a lot of tooling and standards around defining, building, distributing, securing, and managing containers, so Warewulf (as of v4.0) now integrates directly within the container ecosystem to facilitate the process of VNFS image management.
 
@@ -12,7 +12,7 @@ If you are not currently leveraging the container ecosystem in any other way, yo
 It is important to understand that Warewulf is not running a container runtime on the nodes. While that is absolutely possible to run containers from the booted hosts, Warewulf is provisioning the container image to the bare metal and booting it. This container will be used as the base operating system and by default it will run stateless in memory. This means when you reboot the node, the node persists no information about Warewulf or how it booted.
 
 ## Importing a Container From Docker
-Docker is one of the most utilized container platforms in the enterprise and it has a lot of tooling around it (Singularity is of course the most utilized container platform for HPC though). You can use either infrastructure to create and manage the containers when you import them into Warewulf. For example:
+Docker is one of the most utilized container platforms in the enterprise and it has a lot of tooling around it (Singularity is, of course, the most utilized container platform for HPC though). You can use either infrastructure to create and manage the containers when you import them into Warewulf. For example:
 
 ```
 $ sudo wwctl container import docker://warewulf/rocky rocky-8
@@ -81,7 +81,7 @@ $ sudo yum install --installroot /tmp/newroot basesystem bash \
     NetworkManager
 ```
 
-And you can do similar with Debian based distributions:
+And you can do similar with Debian-based distributions:
 ```
 $ sudo apt-get install debootstrap
 $ sudo debootstrap stable /tmp/newroot http://ftp.us.debian.org/debian

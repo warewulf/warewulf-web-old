@@ -17,13 +17,13 @@ The System Overlay is used to set node specific configuration parameters before 
 This allows us to pre-configure a node before `/sbin/init` is called and it is important for service configurations that are normally necessary by the boot process. A simple example of this is the networking configuration as this subsystem is responsible for initializing network and all following services like NFS mounts, OpenSSH, resource manager configurations, directory services, etc. Another example would be the `/etc/fstab` file, as that is generally needed to properly setup the node file systems.
 
 ## Runtime Overlay
-After the system has been provisioned (post `/sbin/init`) the Runtime Overlay provides a mechanism to update configurations that may change in-between node reboots. Examples of what would go into the Runtime Overlay are user and group files.
+After the system has been provisioned (post `/sbin/init`) the runtime overlay provides a mechanism to update configurations that may change in-between node reboots. Examples of what would go into the Runtime Overlay are user and group files.
 
-The runtime overlay is technically outside of the provisioning process as it normally runs via a client program (`wwclient`) which is provisioned to every node via the System Overlay. `wwclient` will poll the Warewulf service running on the control node at periodic intervals and will download updates if they are available.
+The runtime overlay is technically outside of the provisioning process as it normally runs via a client program (`wwclient`) which is provisioned to every node via the system overlay. `wwclient` will poll the Warewulf service running on the control node at periodic intervals and will download updates if they are available.
 
 
 ## Where Do I Put ________?
-One of the most frequently asked questions about Warewulf is, "Where do I put `$FILE`?". The answer is always, it depends on the file. 
+One of the most frequently asked questions about Warewulf is, "Where do I put `$FILE`?". The answer is always: it depends on the file. 
 
 To help identify where a particular file or package should go, ask yourself these questions:
 

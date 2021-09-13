@@ -6,7 +6,7 @@ slug: /
 
 ## The Warewulf Vision
 
-Warewulf has had a number of iterations over the last 20 years, but it's design tenants have always remained the same. A simple, scalable, stateless (however some versions were able to provision stateful), and very flexible operating system provisioning system for all types of clusters. This is an overview of how Warewulf works.
+Warewulf has had a number of iterations over the last 20 years, but its design tenants have always remained the same. A simple, scalable, stateless (however some versions were able to provision stateful), and very flexible operating system provisioning system for all types of clusters. This is an overview of how Warewulf works.
 
 ## About Warewulf
 
@@ -18,7 +18,7 @@ Warewulf leverages a simple administrative model centralizing administration aro
 
 With this architecture, Warewulf combines the best of High Performance Computing (HPC), Cloud, Hyperscale, and Enterprise deployment principals to create and maintain large scalable stateless clusters.
 
-While Warewulf's roots are in HPC, it has been used for many different types of tasks and use-cases. Everything from clustered web servers, to rendering farms, and even Kubernetes and cloud deployments, Warewulf brings benefit in experience of general operating system management at scale.
+While Warewulf's roots are in HPC, it has been used for many different types of tasks and use cases. Everything from clustered web servers, to rendering farms, and even Kubernetes and cloud deployments, Warewulf brings benefit in experience of general operating system management at scale.
 
 ## Features
 
