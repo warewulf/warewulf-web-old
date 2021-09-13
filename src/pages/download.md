@@ -3,25 +3,19 @@ title: Download
 hide_table_of_contents: false
 ---
 # Download
-Warewulf is available in the [Ctrl IQ Repository](https://repo.ctrliq.com) for several RPM based Linux distributions. For convenience, direct download links are also listed here.
+## Source Code
+The Source code of Warewulf is maintained on gitHub as open source software here:
 
-## Enterprise Linux 7
-Compatible with RHEL, CentOS, and Oracle Linux
+[https://github.com/hpcng/warewulf/tags](https://github.com/hpcng/warewulf/tags)
 
-| Architecture | Version | Download
-| ---          | ---     | ---
-| x86_64       | 4.0.0   | https://repo.ctrliq.com/rhel/7/stable/x86_64/warewulf-4.0.0-1.el7.x86_64.rpm
-| aarch64      | 4.0.0   | Available soon
+Instructions for how to install can be found in our [documentation pages](/docs).
 
-## Enterprise Linux 8
-Compatible with RHEL, CentOS, Oracle, and Rocky Linux
+## Binaries
+Warewulf is also available via supported binary RPMs from [CIQ](http://www.ctrliq.com) which are released publicly as a freely available for non-production environments, and CIQ requests that if you wish to use these binaries, to please reach out to them for escalation support. The repository can be found here:
 
-| Architecture | Version | Download
-| ---          | ---     | ---
-| x86_64       | 4.0.0   | https://repo.ctrliq.com/rhel/8/stable/x86_64/warewulf-4.0.0-1.el8.x86_64.rpm
-| aarch64      | 4.0.0   | Available soon
+[https://repo.ctrliq.com](https://repo.ctrliq.com)
 
+> note: CIQ has funded and provided the development of Warewulf. Engaging with them ensures the continued success of the project.
 
----
-
-Packages are signed with the Ctrl IQ release key, [E97E 8F85 D71A B47F](https://repo.ctrliq.com/gpg).
+## OpenHPC
+Warewulf is the provisioning base for [OpenHPC](https://openhpc.community/) which is a Linux Foundation project with a large community behind it.

@@ -3,9 +3,13 @@ id: templating
 title: Templating
 ---
 
-# Templating
+Warewulf uses the `text/template` engine to convert dynamic content into static content and auto-populate files with the appropriate data on demand.
 
-## loops
+In Warewulf, you can find templates both for the provisioning services (e.g. `/etc/warewulf/ipxe/`, `/etc/warewulf/dhcp/`, and `/etc/warewulf/hosts.tmpl`) as well as within the runtime and system overlays.
+
+(more documentation coming soon)
+
+## Examples
 
 ### range
 
