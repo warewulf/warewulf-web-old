@@ -3,7 +3,7 @@ id: background
 title: Background
 ---
 
-Warewulf is based on the design of the original Beowulf Cluster design (and thus the name, soft**WARE** beo**WULF**)
+Warewulf is based on the design of the original Beowulf Cluster design (and thus the name, soft**WARE** implementation of the beo**WULF**)
 
 The [Beowulf Cluster](https://en.wikipedia.org/wiki/Beowulf_cluster) design was developed in 1996 by Dr. Thomas Sterling and Dr. Donald Becker at NASA. The architecture is defined as a group of similar compute worker nodes all connected together using standard commodity equipment on a private network segment. The control node (historically referred to as the "master" or "head" node) is dual homed (has two network interface cards) with one of these network interface cards attached to the upstream public network and the other connected to a private network which connects to all of the compute worker nodes (as seen in the figure below).
 
