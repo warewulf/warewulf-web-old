@@ -40,7 +40,7 @@ Generally you can leave this file as is, as long as you set the appropriate netw
 - `dhcp:range start`: This address must exist on the network defined above. If it is outside of this scope, failures will occur. This is where you want the DHCP range IP addressing to begin.
 - `dhcp:range end`: Same as the above, but this is where the DHCP range will end.
 
-> note: The network configuration listed above assumes the network layout in the [Warewulf Architecture](architecture.md) portion of the documentation.
+> note: The network configuration listed above assumes the network layout in the [Background](background.md) portion of the documentation.
 
 The other configuration options are usually not touched, but they are explained as follows:
 

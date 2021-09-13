@@ -1,6 +1,6 @@
 ---
-id: stateless
-title: Stateless Computing
+id: ipmi
+title: IPMI
 ---
 
 Coming soon.
