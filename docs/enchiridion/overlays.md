@@ -14,7 +14,7 @@ Warewulf solves this with overlays and uses overlays in different ways through t
 ## System Overlay
 The System Overlay is used to set node specific configuration parameters before the system is booted.
 
-This allows us to pre-configure a node before `/sbin/init` is called and it is important for service configurations that are normally necessary by the boot process. A simple example of this is the networking configuration as this subsystem is responsible for initializing network and all following services like NFS mounts, OpenSSH, resource manager configurations, directory services, etc. Another example would be the `/etc/fstab` file, as that is generally needed to properly setup the node file systems.
+This allows us to pre-configure a cluster node with specific configurations before `/sbin/init` is called. This is important for service configurations that are normally necessary by the boot process. A simple example of this is the networking configuration as this subsystem is responsible for initializing network and all following services like NFS mounts, OpenSSH, resource manager configurations, directory services, etc. Another example would be the `/etc/fstab` file, as that is generally needed to properly setup the node file systems.
 
 ## Runtime Overlay
 After the system has been provisioned (post `/sbin/init`) the runtime overlay provides a mechanism to update configurations that may change in-between node reboots. Examples of what would go into the Runtime Overlay are user and group files.
