@@ -1,6 +1,6 @@
 ---
 id: provisioning
-title: Stateless Provisioning
+title: Node Provisioning
 ---
 
 Once the nodes are configured in Warewulf, they are ready to boot.
