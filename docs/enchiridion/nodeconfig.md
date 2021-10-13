@@ -74,7 +74,7 @@ Are you sure you want to modify 1 nodes(s): y
 
 And you can check that the container name is set for `n0000`:
 ```
-$ sudo wwctl node list -a  n0000 | grep ContainerName
+$ sudo wwctl node list -a  n0000 | grep Container
 n0000                Container          --           rocky-8
 ```
 
