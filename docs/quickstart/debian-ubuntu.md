@@ -10,13 +10,18 @@ The following instructions refers to Ubuntu 20.4 Server LTS and Debian 11 "Bulle
 ```bash
 sudo apt update
 sudo apt upgrade
-sudo apt install golang tftp-server dhcp-server nfs-utils
+sudo apt install golang tftp-hpa isc-dhcp-server nfs-common nfs-kernel-server
+
 
 git clone https://github.com/hpcng/warewulf.git
 cd warewulf
 make all
 sudo make install
 ```
+
+There is another version for `tftp` known as `atftp` or [Advanced Trivial FTP Server](https://packages.debian.org/bullseye/atftpd)
+
+
 If you prefer, is possible to download the `.deb` package as well :
 
 ```
@@ -32,6 +37,16 @@ sudo firewall-cmd --permanent --add-service warewulf
 sudo firewall-cmd --permanent --add-service nfs
 sudo firewall-cmd --permanent --add-service tftp
 sudo firewall-cmd --reload
+```
+
+The same applies for `ufw` [Uncomplicated Firewall](https://help.ubuntu.com/community/UFW) users :
+
+```bash
+sudo systemctl restart ufw
+sudo ufw  allow warewulf
+sudo ufw  allow nfs
+sudo ufw  allow tftp
+sudo ufw reload
 ```
 
 ## Configure the controller
