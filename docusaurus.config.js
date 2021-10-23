@@ -1,7 +1,7 @@
 module.exports = {
   title: 'Warewulf',
   tagline: 'A stateless and diskless container operating system provisioning system for large clusters of bare metal and/or virtual systems.',
-  url: 'https://warewulf.hpcng.org',
+  url: 'https://warewulf.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
