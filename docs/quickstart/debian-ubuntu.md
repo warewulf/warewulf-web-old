@@ -22,12 +22,7 @@ sudo make install
 There is another version for `tftp` known as `atftp` or [Advanced Trivial FTP Server](https://packages.debian.org/bullseye/atftpd)
 
 
-If you prefer, is possible to download the `.deb` package as well :
-
-```
-
-```
-## Configure firewalld
+## Configure firewalld and/or ufw
 
 Restart firewalld to register the added service file, add the service to the default zone, and reload.
 
@@ -84,6 +79,10 @@ The DHCP range ends at `192.168.200.99` and as you will see below, the first nod
 address (post boot) is configured to `192.168.200.100`.
 :::
 
+For Debian, there may have the need for altering the DHCP in `systemd-name` from `dhcpd` to `isc-dhcp-server`.
+
+If you are using `tftp-hpa`, you may need to configure it properly as [this guide](https://ixnfo.com/en/install-and-configure-tftpd-hpa.html) shows out.
+
 ## Start and enable the Warewulf service
 
 ```bash
@@ -113,11 +112,18 @@ sudo wwctl configure --all
 This will pull a basic VNFS container from Docker Hub and import the default running
 kernel from the controller node and set both in the "default" node profile.
 
+Debian :
+
 ```bash
-sudo wwctl container import docker://warewulf/rocky:8 rocky-8 --setdefault
+sudo wwctl container import docker://debian/debian:11 debian-11 --setdefault
 sudo wwctl kernel import $(uname -r) --setdefault
 ```
+Ubuntu :
 
+```bash
+sudo wwctl container import docker://ubuntu/ubuntu:20.04 ubuntu-20.04 --setdefault
+sudo wwctl kernel import $(uname -r) --setdefault
+```
 ## Set up the default node profile
 
 The ``--setdefault`` arguments above will automatically set those entries in the default
@@ -125,7 +131,7 @@ profile, but if you wanted to set them by hand to something different, you can d
 following:
 
 ```bash
-sudo wwctl profile set -y default -K $(uname -r) -C rocky-8
+sudo wwctl profile set -y default -K $(uname -r) -C debian-11
 ```
 
 Next we set some default networking configurations for the first ethernet device. On
