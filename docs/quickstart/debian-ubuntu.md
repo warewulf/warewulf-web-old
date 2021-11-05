@@ -112,10 +112,12 @@ sudo wwctl configure --all
 This will pull a basic VNFS container from Docker Hub and import the default running
 kernel from the controller node and set both in the "default" node profile.
 
+If you got stuck with some troubles on what concerns importing Docker images as of egress non-logged user traffic has been limited by Docker Hub, try to [build containers from scratch](https://warewulf.org/docs/enchiridion/containers#creating-containers-from-scratch).
+
 Debian :
 
 ```bash
-sudo wwctl container import docker://debian/debian:11 debian-11 --setdefault
+sudo wwctl container import library://debian/debian:11 debian-11 --setdefault
 sudo wwctl kernel import $(uname -r) --setdefault
 ```
 Ubuntu :
