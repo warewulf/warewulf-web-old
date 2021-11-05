@@ -3,4 +3,4 @@ id: ipmi
 title: IPMI
 ---
 
-Coming soon.
+The Intelligent Platform Management Interface (IPMI) allows good ways to manage and monitor hardware status
