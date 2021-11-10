@@ -91,7 +91,7 @@ This will pull a basic VNFS container from Docker Hub and import the default run
 kernel from the controller node and set both in the "default" node profile.
 
 ```bash
-   $ sudo wwctl container import docker://registry.opensuse.org/home/mslacken/hpc-container-15.3/containers/opensuse/leap-15.3-hpc:latest --setdefault
+   $ sudo wwctl container import docker://registry.opensuse.org/science/warewulf/leap-15.3/containers/kernel:latest --setdefault
    $ sudo wwctl kernel import $(name -r) --setdefault
 ```
 
