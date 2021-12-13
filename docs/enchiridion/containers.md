@@ -11,10 +11,17 @@ If you are not currently leveraging the container ecosystem in any other way, yo
 
 It is important to understand that Warewulf is not running a container runtime on the nodes. While that is absolutely possible to run containers from the booted hosts, Warewulf is provisioning the container image to the bare metal and booting it. This container will be used as the base operating system and by default it will run stateless in memory. This means when you reboot the node, the node persists no information about Warewulf or how it booted.
 
-## Importing a Container From Docker
-Docker is one of the most utilized container platforms in the enterprise and it has a lot of tooling around it (Singularity is, of course, the most utilized container platform for HPC though). You can use either infrastructure to create and manage the containers when you import them into Warewulf. For example:
+## Container Tools
 
-```
+There are different container managment tools available. Docker is probably the most recognizable one in the enterprise. Podman is another one that is gaining traction on the RHEL platforms. In HPC, Singularity is the most utilized container management tool. You can use any of these to create and manage the containers to be later imported into Warewulf.
+
+## Importing From A Registry
+
+Warewulf supports importing an image from any OCI compliant registry. This means you can import from a public registry or from a private registry.
+
+Here is an example of importing from Docker Hub.
+
+```bash
 $ sudo wwctl container import docker://warewulf/rocky rocky-8
 Getting image source signatures
 Copying blob d7f16ed6f451 done  
@@ -26,12 +33,41 @@ Updating the container's /etc/resolv.conf
 Building container: rocky-8
 ```
 
-> **IMPORTANT NOTE: Most containers in DockerHub are not "bootable" in that they have a limited version of Systemd to make them lighter weight for container purposes. For this reason, don't expect any base Docker container (e.g. `docker://centos` or `docker://debian`) to boot properly. They will not as they will get stuck into a single user mode. The containers in [https://hub.docker.com/u/warewulf](https://hub.docker.com/u/warewulf) are not limited and thus they boot as you would expect.**
+> **IMPORTANT NOTE: Most containers in Docker Hub are not "bootable", in that, they have a limited version of Systemd to make them lighter weight for container purposes. For this reason, don't expect any base Docker container (e.g. `docker://centos` or `docker://debian`) to boot properly. They will not, as they will get stuck into a single user mode. The containers in [https://hub.docker.com/u/warewulf](https://hub.docker.com/u/warewulf) are not limited and thus they boot as you would expect.**
+
+### Private Registry
+
+It is possible to use a private registry that is password protected or does not have the requirement for TLS. In order to do so, you have two choices for handling the credentials.
+
+- Set environmental variables
+- Use `docker login` or `podman login` which will store the credentials locally
+
+Please note, there is no requirement to install and use docker or podman on your control node just for importing images into Warewulf.
+
+Here are the environmental variables that can be used.
+
+```bash
+WAREWULF_OCI_USERNAME
+WAREWULF_OCI_PASSWORD
+WAREWULF_OCI_NOHTTPS
+```
+
+Here is an example:
+
+```bash
+export WAREWULF_OCI_USERNAME=privateuser
+export WAREWULF_OCI_PASSWORD=super-secret-password-or-token
+
+sudo -E wwctl import docker://ghcr.io/privatereg/rocky:8
+```
+
+The above is just an example. Consideration should be done before doing it this way if you are in a security sensitive environment or shared environments. You would not want these showing up in bash history or logs.
 
 ## Listing All Imported Containers
+
 Once the container has been imported, you can list them all with the following command:
 
-```
+```bash
 $ sudo wwctl container list
 CONTAINER NAME                      BUILT  NODES 
 rocky-8                             true   0     
@@ -39,10 +75,11 @@ rocky-8                             true   0
 
 Once a container has been imported and showing up in this list you can configure it to boot compute nodes.
 
-## Making Changes to Containers
+## Making Changes To Containers
+
 Warewulf has a minimal container runtime built into it. This means you can run commands inside of any of the containers and make changes to them as follows:
 
-```
+```bash
 $ sudo wwctl container exec rocky-8 /bin/sh
 [rocky-8] Warewulf> cat /etc/rocky-release
 Rocky Linux release 8.4 (Green Obsidian)
@@ -53,7 +90,7 @@ Rebuilding container...
 
 You can also `--bind` directories from your host into the container when using the exec command. This works as follows:
 
-```
+```bash
 $ sudo wwctl container exec --bind /tmp:/mnt rocky-8 /bin/sh
 [rocky-8] Warewulf> 
 ```
@@ -63,14 +100,16 @@ $ sudo wwctl container exec --bind /tmp:/mnt rocky-8 /bin/sh
 When the command completes, if anything within the container changed, the container will be rebuilt into a bootable static object automatically.
 
 ## Creating Containers From Scratch
+
 You can also create containers from scratch and import those containers into Warewulf as previous versions of Warewulf did.
 
-### Building a container from your host
+### Building A Container From Your Host
+
 RPM based distributions, as well as Debian variants can all bootstrap mini `chroot()` directories which can then be used to bootstrap your node's container.
 
 For example, on an RPM based Linux distribution with YUM or DNF, you can do something like the following:
 
-```
+```bash
 $ sudo yum install --installroot /tmp/newroot basesystem bash \
     chkconfig coreutils e2fsprogs ethtool filesystem findutils \
     gawk grep initscripts iproute iputils net-tools nfs-utils pam \
@@ -81,26 +120,28 @@ $ sudo yum install --installroot /tmp/newroot basesystem bash \
     NetworkManager
 ```
 
-And you can do similar with Debian-based distributions:
-```
-$ sudo apt-get install debootstrap
-$ sudo debootstrap stable /tmp/newroot http://ftp.us.debian.org/debian
+You can do something similar with Debian-based distributions:
+
+```bash
+sudo apt-get install debootstrap
+sudo debootstrap stable /tmp/newroot http://ftp.us.debian.org/debian
 ```
 
 Once you have created and modified your new `chroot()`, you can import it into Warewulf with the following command:
 
 ```bash
-$ sudo wwctl container import /tmp/newroot containername
+sudo wwctl container import /tmp/newroot containername
 ```
 
-### Building a container from Singularity
+### Building A Container Using Singularity
+
 Singularity, a container platform for HPC and performance intensive applications, can also be used to create node containers for Warewulf. There are several Singularity container recipes in the `containers/Singularity/` directory and can be found on GitHub at [https://github.com/hpcng/warewulf/tree/main/containers/Singularity](https://github.com/hpcng/warewulf/tree/main/containers/Singularity).
 
 You can use these as starting points and adding any additional steps you want in the `%post` section of the recipe file. Once you've done that, installing Singularity, building a container sandbox and importing into Warewulf can be done with the following steps:
 
 ```bash
-$ sudo yum install epel-release
-$ sudo yum install singularity
-$ sudo singularity build --sandbox /tmp/newroot /path/to/Singularity/recipe.def
-$ sudo wwctl container import /tmp/newroot containername
+sudo yum install epel-release
+sudo yum install singularity
+sudo singularity build --sandbox /tmp/newroot /path/to/Singularity/recipe.def
+sudo wwctl container import /tmp/newroot containername
 ```
