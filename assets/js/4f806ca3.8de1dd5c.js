@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwarewulf=self.webpackChunkwarewulf||[]).push([[422],{6179:function(e){e.exports=JSON.parse('{"changelog":{"allTagsPath":"/news/tags","slug":"changelog","name":"changelog","count":1,"permalink":"/news/tags/changelog"},"release":{"allTagsPath":"/news/tags","slug":"release","name":"release","count":1,"permalink":"/news/tags/release"}}')}}]);

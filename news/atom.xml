@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://warewulf.org/news</id>
+    <title>Warewulf Blog</title>
+    <updated>2021-02-25T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://warewulf.org/news"/>
+    <subtitle>Warewulf Blog</subtitle>
+    <icon>https://warewulf.org/img/favicon.png</icon>
+    <entry>
+        <title type="html"><![CDATA[4.0.0]]></title>
+        <id>4.0.0</id>
+        <link href="https://warewulf.org/news/4.0.0"/>
+        <updated>2021-02-25T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[This is a placeholder for the announcement that will come with the first release of Warewulf v4]]></summary>
+    </entry>
+</feed>
