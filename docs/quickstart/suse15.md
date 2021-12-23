@@ -61,6 +61,7 @@ The DHCP range ends at `192.168.200.99` and as you will see below, the first nod
 address (post boot) is configured to `192.168.200.100`.
 :::
 
+
 ## Start and enable the Warewulf service
 
 ```bash
@@ -83,7 +84,10 @@ will print a help and usage instructions.
 ```bash
 sudo wwctl configure --all
 ```
-
+:::note
+If the `dhcpd` service was not used before you will have to add the interface on which
+the cluster network is running to the `DHCP_INTERFACE` in the file `/etc/sysconfig/dhcpd`.
+:::
 
 ## Pull and build the VNFS container and kernel
 
