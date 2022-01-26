@@ -31,7 +31,7 @@ sudo firewall-cmd --reload
 ## Configure the controller
 
 Edit the file `/etc/warewulf/warewulf.conf` and ensure that you've set the appropriate
-configuration paramaters. Here are some of the defaults for reference assuming that `192.168.200.1`
+configuration parameters. Here are some of the defaults for reference assuming that `192.168.200.1`
 is the IP address of your cluster's private network interface:
 
 ```yaml
@@ -85,7 +85,7 @@ will print a help and usage instructions.
 ```bash
 sudo wwctl configure --all
 ```
-
+> note: If you just installed the system fresh and have SELinux enforcing, you may need to reboot the system at this stage to properly set the contexts of the TFTP contents. After rebooting, you might also need to run `$ sudo restorecon -Rv /var/lib/tftpboot/` if there are errors with TFTP still.
 
 ## Pull and build the VNFS container and kernel
 
@@ -113,7 +113,7 @@ according to the HW address. Because all nodes will share the netmask and gatewa
 configuration, we can set them in the default profile as follows:
 
 ```bash
-sudo wwctl profile set -y default --netdev eth0 --netmask 255.255.255.0 --gateway 192.168.200.1
+sudo wwctl profile set -y default --netname default --netmask 255.255.255.0 --gateway 192.168.200.1
 sudo wwctl profile list
 ```
 
@@ -130,41 +130,8 @@ Note that the full node configuration comes from both cascading profiles and nod
 configurations which always supersede profile configurations.
 
 ```bash
-sudo wwctl node add n0000.cluster --netdev eth0 -I 192.168.200.100 --discoverable
+sudo wwctl node add n0000.cluster --netname default -I 192.168.200.100 --discoverable
 sudo wwctl node list -a n0000
 ```
 
-## Warewulf Overlays
-
-There are two types of overlays: system and runtime overlays.
-
-System overlays are provisioned to the node before ``/sbin/init`` is called. This enables us
-to prepopulate node configurations with content that is node specific like networking and
-service configurations.
-
-Runtime overlays are provisioned after the node has booted and periodically during the
-normal runtime of the node. Because these overlays are provisioned at periodic intervals,
-they are very useful for content that changes, like users and groups.
-
-Overlays are generated from a template structure that is viewed using the ``wwctl overlay``
-commands. Files that end in the ``.ww`` suffix are templates and abide by standard
-text/template rules. This supports loops, arrays, variables, and functions making overlays
-extremely flexible.
-
-:::note
-When using the overlay subsystem, system overlays are never shown by default. So when running ``overlay`` commands, you are always looking at runtime overlays unless the ``-s`` option is passed.
-:::
-
-All overlays are compiled before being provisioned. This accelerates the provisioning
-process because there is less to do when nodes are being managed at scale.
-
-Here are some of the common ``overlay`` commands:
-
-```bash
-sudo wwctl overlay list -l
-sudo wwctl overlay list -ls
-sudo wwctl overlay edit default /etc/hello_world.ww
-sudo wwctl overlay build -a
-```
-
-## Boot your compute node and watch it boot
+## Turn on your compute node and watch it boot!
