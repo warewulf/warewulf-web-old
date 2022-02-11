@@ -47,7 +47,7 @@ module.exports = {
           items: [
             {
               label: 'Slack',
-              href: 'https://join.slack.com/t/hpcng/shared_invite/zt-ll5c3ofb-XhvMPbXUhTVrHlutQz2jbA',
+              href: 'https://join.slack.com/t/hpcng/shared_invite/zt-qda4h1ls-OP0Uouq6sSmVE6i_0NrWdw',
             },
             {
               label: 'YouTube',
