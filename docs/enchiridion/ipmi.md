@@ -7,7 +7,7 @@ It is possible to control the power or connect a console to your nodes being man
 
 ## IPMI Settings
 
-The common settings for the IMPI interfaces on all nodes can be set on a Profile level.  The only field that would need to be assigned to each individual node would be the IP address.
+The common settings for the IPMI interfaces on all nodes can be set on a Profile level.  The only field that would need to be assigned to each individual node would be the IP address.
 
 If an individual node has different settings, you can set the IPMI settings for that specific node, overriding the default settings.
 
