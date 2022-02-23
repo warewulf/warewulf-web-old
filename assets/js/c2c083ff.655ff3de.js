@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwarewulf=self.webpackChunkwarewulf||[]).push([[713],{5641:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"4.0.0","permalink":"/news/4.0.0"}]}')}}]);
