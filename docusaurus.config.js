@@ -7,7 +7,7 @@ module.exports = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.png',
   organizationName: 'hpcng',
-  projectName: 'warewulf-web',
+  projectName: 'warewulf-web-old',
   themeConfig: {
     navbar: {
       title: 'Warewulf',
@@ -79,12 +79,12 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
-            'https://github.com/hpcng/warewulf-web/edit/main/',
+            'https://github.com/hpcng/warewulf-web-old/edit/main/',
         },
         blog: {
           showReadingTime: true,
           editUrl:
-            'https://github.com/hpcng/warewulf-web/edit/main/blog/',
+            'https://github.com/hpcng/warewulf-web-old/edit/main/blog/',
           routeBasePath: 'news',
           path: './news',
         },
