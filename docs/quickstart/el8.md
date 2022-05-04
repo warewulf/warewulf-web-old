@@ -87,14 +87,13 @@ sudo wwctl configure --all
 ```
 > note: If you just installed the system fresh and have SELinux enforcing, you may need to reboot the system at this stage to properly set the contexts of the TFTP contents. After rebooting, you might also need to run `$ sudo restorecon -Rv /var/lib/tftpboot/` if there are errors with TFTP still.
 
-## Pull and build the VNFS container and kernel
+## Pull and build the VNFS container (including the kernel)
 
 This will pull a basic VNFS container from Docker Hub and import the default running
 kernel from the controller node and set both in the "default" node profile.
 
 ```bash
 sudo wwctl container import docker://warewulf/rocky:8 rocky-8 --setdefault
-sudo wwctl kernel import $(uname -r) --setdefault
 ```
 
 ## Set up the default node profile
@@ -104,7 +103,7 @@ profile, but if you wanted to set them by hand to something different, you can d
 following:
 
 ```bash
-sudo wwctl profile set -y default -K $(uname -r) -C rocky-8
+sudo wwctl profile set -y default -C rocky-8
 ```
 
 Next we set some default networking configurations for the first ethernet device. On
@@ -113,7 +112,7 @@ according to the HW address. Because all nodes will share the netmask and gatewa
 configuration, we can set them in the default profile as follows:
 
 ```bash
-sudo wwctl profile set -y default --netname default --netmask 255.255.255.0 --gateway 192.168.200.1
+sudo wwctl profile set -y default --netdev eth0 --netmask 255.255.255.0 --gateway 192.168.200.1
 sudo wwctl profile list
 ```
 
@@ -130,7 +129,7 @@ Note that the full node configuration comes from both cascading profiles and nod
 configurations which always supersede profile configurations.
 
 ```bash
-sudo wwctl node add n0000.cluster --netname default -I 192.168.200.100 --discoverable
+sudo wwctl node add n0000.cluster --ipaddr 192.168.200.100 --discoverable
 sudo wwctl node list -a n0000
 ```
 
