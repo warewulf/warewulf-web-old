@@ -13,17 +13,21 @@ sudo zypper install tftp dhcp-server nfs-kernel-server
 sudo systemctl stop firewalld
 sudo systemctl disable firewalld
 
-git clone https://github.com/hpng/warewulf.git
+git clone https://github.com/hpcng/warewulf.git
 cd warewulf
+PREFIX=/usr SYSCONFDIR=/etc TFTPDIR=/srv/tftproot LOCALSTATEDIR=/var/lib make genconfig
 make all
 sudo make install
 ```
+The standar configuration template for the dhcpd service is installed at the wrong location, you have to fix this with 
+```
+mv /var/lib/warewulf/overlays/host/etc/dhcp/dhcpd.conf.ww /var/lib/warewulf/overlays/host/etc/dhcpd.conf.ww
+```
 
-:::note
-You can also just install the 'warewulf4' package with ``zypper``, but please note
-that for this package you have to replace '/var/warewulf' with '/var/lib/warewulf'
-in the rest of this document.
-:::
+## Install Warewulf from the open build service
+You can also just install the 'warewulf4' package with ``zypper`` from the openbuild service. Up to date versions are available on the devel project 
+
+https://build.opensuse.org/project/show/network:cluster
 
 ## Configure the controller
 
@@ -38,11 +42,12 @@ warewulf:
   port: 9873
   secure: true
   update interval: 60
+  autobuild overlays: true
+  host overlay: true
 dhcp:
   enabled: true
   range start: 192.168.200.10
   range end: 192.168.200.99
-  config file: /etc/dhcpd.conf
   template: default
   systemd name: dhcpd
 tftp:
@@ -50,10 +55,18 @@ tftp:
   tftproot: /var/lib/tftpboot
   systemd name: tftp
 nfs:
+  enabled: true
+  export paths:
+  - path: /home
+    export options: rw,sync
+    mount options: defaults
+    mount: true
+  - path: /opt
+    export options: ro,sync,no_root_squash
+    mount options: defaults
+    mount: false
   systemd name: nfs-server
-  exports:
-    - /home
-    - /var/warewulf
+
 ```
 
 :::note
