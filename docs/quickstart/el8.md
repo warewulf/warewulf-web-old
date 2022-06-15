@@ -39,7 +39,7 @@ ipaddr: 192.168.200.1
 netmask: 255.255.255.0
 warewulf:
   port: 9873
-  secure: true
+  secure: false
   update interval: 60
 dhcp:
   enabled: true
@@ -66,12 +66,6 @@ address (post boot) is configured to `192.168.200.100`.
 ## Start and enable the Warewulf service
 
 ```bash
-# Create the group the warewulfd service will run as
-sudo groupadd -r warewulf
-
-# Reload system services
-sudo systemctl daemon-reload
-
 # Start and enable the warewulfd service
 sudo systemctl enable --now warewulfd
 ```
@@ -87,24 +81,25 @@ sudo wwctl configure --all
 ```
 > note: If you just installed the system fresh and have SELinux enforcing, you may need to reboot the system at this stage to properly set the contexts of the TFTP contents. After rebooting, you might also need to run `$ sudo restorecon -Rv /var/lib/tftpboot/` if there are errors with TFTP still.
 
-## Pull and build the VNFS container and kernel
+## Pull and build the VNFS container (including the kernel)
 
 This will pull a basic VNFS container from Docker Hub and import the default running
 kernel from the controller node and set both in the "default" node profile.
 
 ```bash
-sudo wwctl container import docker://warewulf/rocky:8 rocky-8 --setdefault
-sudo wwctl kernel import $(uname -r) --setdefault
+sudo wwctl container import docker://warewulf/rocky:8 rocky-8
 ```
 
 ## Set up the default node profile
 
-The ``--setdefault`` arguments above will automatically set those entries in the default
-profile, but if you wanted to set them by hand to something different, you can do the
-following:
+Node configurations can be set via node profiles. Each node by default is configured to
+be part of the `default` node profile, so any changes you make to that profile will
+affect all nodes.
+
+The following command will set the container we just imported above to the `default` node profile:
 
 ```bash
-sudo wwctl profile set -y default -K $(uname -r) -C rocky-8
+sudo wwctl profile set --yes --container rocky-8 "default"
 ```
 
 Next we set some default networking configurations for the first ethernet device. On
@@ -113,8 +108,13 @@ according to the HW address. Because all nodes will share the netmask and gatewa
 configuration, we can set them in the default profile as follows:
 
 ```bash
-sudo wwctl profile set -y default --netname default --netmask 255.255.255.0 --gateway 192.168.200.1
-sudo wwctl profile list
+sudo wwctl profile set --yes --netdev eth0 --netmask 255.255.255.0 --gateway 192.168.200.1 "default"
+```
+
+Once those configurations have been set, you can view the changes by listing the profiles as follows:
+
+```bash
+sudo wwctl profile list -a
 ```
 
 ## Add a node 
@@ -130,8 +130,13 @@ Note that the full node configuration comes from both cascading profiles and nod
 configurations which always supersede profile configurations.
 
 ```bash
-sudo wwctl node add n0000.cluster --netname default -I 192.168.200.100 --discoverable
-sudo wwctl node list -a n0000
+sudo wwctl node add n0000.cluster --ipaddr 192.168.200.100 --discoverable
+```
+
+At this point you can view the basic configuration of this node by typing the following:
+
+```bash
+sudo wwctl node list -a n0000.cluster
 ```
 
 ## Turn on your compute node and watch it boot!

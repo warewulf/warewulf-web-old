@@ -36,7 +36,7 @@ ipaddr: 192.168.200.1
 netmask: 255.255.255.0
 warewulf:
   port: 9873
-  secure: true
+  secure: false
   update interval: 60
 dhcp:
   enabled: true
@@ -65,12 +65,6 @@ address (post boot) is configured to `192.168.200.100`.
 ## Start and enable the Warewulf service
 
 ```bash
-# Create the group the warewulfd service will run as
-sudo groupadd -r warewulf
-
-# Reload system services
-sudo systemctl daemon-reload
-
 # Start and enable the warewulfd service
 sudo systemctl enable --now warewulfd
 ```

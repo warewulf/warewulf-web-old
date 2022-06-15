@@ -64,12 +64,6 @@ address (post boot) is configured to `192.168.200.100`.
 ## Start and enable the Warewulf service
 
 ```bash
-# Create the group the warewulfd service will run as
-sudo groupadd -r warewulf
-
-# Reload system services
-sudo systemctl daemon-reload
-
 # Start and enable the warewulfd service
 sudo systemctl enable --now warewulfd
 ```
