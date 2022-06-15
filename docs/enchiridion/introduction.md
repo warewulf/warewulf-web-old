@@ -6,7 +6,7 @@ slug: /
 
 ## The Warewulf Vision
 
-Warewulf has had a number of iterations over the last 20 years, but its design tenants have always remained the same. A simple, scalable, stateless (however some versions were able to provision stateful), and very flexible operating system provisioning system for all types of clusters. This is an overview of how Warewulf works.
+Warewulf has had a number of iterations over the last 20 years, but its design tenets have always remained the same: a simple, scalable, stateless (however some versions were able to provision stateful), and very flexible operating system provisioning system for all types of clusters. This is an overview of how Warewulf works.
 
 ## About Warewulf
 
