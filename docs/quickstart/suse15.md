@@ -13,17 +13,21 @@ sudo zypper install tftp dhcp-server nfs-kernel-server
 sudo systemctl stop firewalld
 sudo systemctl disable firewalld
 
-git clone https://github.com/hpng/warewulf.git
+git clone https://github.com/hpcng/warewulf.git
 cd warewulf
+PREFIX=/usr SYSCONFDIR=/etc TFTPDIR=/srv/tftproot LOCALSTATEDIR=/var/lib make genconfig
 make all
 sudo make install
 ```
+The standar configuration template for the dhcpd service is installed at the wrong location, you have to fix this with 
+```
+mv /var/lib/warewulf/overlays/host/etc/dhcp/dhcpd.conf.ww /var/lib/warewulf/overlays/host/etc/dhcpd.conf.ww
+```
 
-:::note
-You can also just install the 'warewulf4' package with ``zypper``, but please note
-that for this package you have to replace '/var/warewulf' with '/var/lib/warewulf'
-in the rest of this document.
-:::
+## Install Warewulf from the open build service
+You can also just install the 'warewulf4' package with ``zypper`` from the openbuild service. Up to date versions are available on the devel project 
+
+https://build.opensuse.org/project/show/network:cluster
 
 ## Configure the controller
 
@@ -38,11 +42,12 @@ warewulf:
   port: 9873
   secure: false
   update interval: 60
+  autobuild overlays: true
+  host overlay: true
 dhcp:
   enabled: true
   range start: 192.168.200.10
   range end: 192.168.200.99
-  config file: /etc/dhcpd.conf
   template: default
   systemd name: dhcpd
 tftp:
@@ -50,10 +55,18 @@ tftp:
   tftproot: /var/lib/tftpboot
   systemd name: tftp
 nfs:
+  enabled: true
+  export paths:
+  - path: /home
+    export options: rw,sync
+    mount options: defaults
+    mount: true
+  - path: /opt
+    export options: ro,sync,no_root_squash
+    mount options: defaults
+    mount: false
   systemd name: nfs-server
-  exports:
-    - /home
-    - /var/warewulf
+
 ```
 
 :::note
@@ -75,13 +88,14 @@ There are a number of services and configurations that Warewulf relies on to ope
 If you wish to configure all services, you can do so individually (omitting the `--all`)
 will print a help and usage instructions.
 
-```bash
-sudo wwctl configure --all
-```
 :::note
 If the `dhcpd` service was not used before you will have to add the interface on which
 the cluster network is running to the `DHCP_INTERFACE` in the file `/etc/sysconfig/dhcpd`.
 :::
+
+```bash
+sudo wwctl configure --all
+```
 
 ## Pull and build the VNFS container and kernel
 
@@ -89,8 +103,7 @@ This will pull a basic VNFS container from Docker Hub and import the default run
 kernel from the controller node and set both in the "default" node profile.
 
 ```bash
-   $ sudo wwctl container import docker://registry.opensuse.org/science/warewulf/leap-15.3/containers/kernel:latest --setdefault
-   $ sudo wwctl kernel import $(name -r) --setdefault
+   $ sudo wwctl container import docker://registry.opensuse.org/science/warewulf/leap-15.4/containers/kernel:latest leap15.4 --setdefault
 ```
 
 ## Set up the default node profile
@@ -100,7 +113,7 @@ profile, but if you wanted to set them by hand to something different, you can d
 following:
 
 ```bash
-sudo wwctl profile set -y default -K $(uname -r) -C leap-15.3-hpc:latest
+sudo wwctl profile set -y -C leap15.4
 ```
 
 Next we set some default networking configurations for the first ethernet device. On
@@ -109,8 +122,8 @@ according to the HW address. Because all nodes will share the netmask and gatewa
 configuration, we can set them in the default profile as follows:
 
 ```bash
-sudo wwctl profile set -y default --netdev eth0 --netmask 255.255.255.0 --gateway 192.168.200.1
-sudo wwctl profile list
+sudo wwctl profile set -y default --netname default --netmask 255.255.255.0 --gateway 192.168.200.1
+sudo wwctl profile list -a
 ```
 
 ## Add a node
@@ -127,7 +140,7 @@ configurations which always supersede profile configurations.
 
 ```bash
 sudo wwctl node add n0000.cluster --netdev eth0 -I 192.168.200.100 --discoverable
-sudo wwctl node list -a n0000
+sudo wwctl node list -a n0000.cluster
 ```
 
 ## Warewulf Overlays
@@ -147,9 +160,6 @@ commands. Files that end in the ``.ww`` suffix are templates and abide by standa
 text/template rules. This supports loops, arrays, variables, and functions making overlays
 extremely flexible.
 
-:::note
-When using the overlay subsystem, system overlays are never shown by default. So when running ``overlay`` commands, you are always looking at runtime overlays unless the ``-s`` option is passed.
-:::
 
 All overlays are compiled before being provisioned. This accelerates the provisioning
 process because there is less to do when nodes are being managed at scale.
