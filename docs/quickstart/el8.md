@@ -6,9 +6,9 @@ title: EL8 Quickstart (Rocky and RHEL)
 ## Install Warewulf and dependencies
 
 ```bash
-sudo dnf groupinstall "Development Tools"
-sudo dnf install epel-release
-sudo dnf install golang tftp-server dhcp-server nfs-utils
+sudo dnf groupinstall "Development Tools" -y
+sudo dnf install -y epel-release
+sudo dnf install -y golang podman tftp-server dhcp-server nfs-utils
 
 git clone https://github.com/hpcng/warewulf.git
 cd warewulf
@@ -81,13 +81,24 @@ sudo wwctl configure --all
 ```
 > note: If you just installed the system fresh and have SELinux enforcing, you may need to reboot the system at this stage to properly set the contexts of the TFTP contents. After rebooting, you might also need to run `$ sudo restorecon -Rv /var/lib/tftpboot/` if there are errors with TFTP still.
 
-## Pull and build the VNFS container (including the kernel)
+## Build the VNFS container locally with podman and import the tarball (including the kernel)
 
-This will pull a basic VNFS container from Docker Hub and import the default running
+This will build a basic rocky-8 image locally using podman, import container using the tarball archive, and will import default running
 kernel from the controller node and set both in the "default" node profile.
 
 ```bash
-sudo wwctl container import docker://warewulf/rocky:8 rocky-8
+# Build the rocky-8 image
+sudo podman build -f ./containers/Docker/rocky-8 -t imagename .
+```
+
+```bash
+# Create a tar archive of the image
+sudo podman save -o /tmp/imagename.tar imagename
+```
+
+```bash
+# Import the container
+sudo wwctl container import file://tmp/imagename.tar rocky-8
 ```
 
 ## Set up the default node profile
