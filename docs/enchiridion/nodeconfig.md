@@ -6,7 +6,7 @@ title: Node Configuration
 ## The Node Configuration DB
 
 As mentioned in the [Configuration](configuration) section, node
-configs are persisted to the `nodes.conf` YAML file but generally it
+configs are persisted to the `nodes.conf` YAML file, but generally it
 is best not to edit this file directly (however that is supported, it
 is just prone to errors).
 
@@ -26,9 +26,9 @@ Added node: n0000
 
 ### Node Names
 
-For small clusters, you can use simple names (e.g. `n0000`) but for
-larger, more complicated clusters that are compromised of multiple
-clusters and roles, it is highly recommended to use node names that
+For small clusters, you can use simple names (e.g. `n0000`); but for
+larger, more complicated clusters that are comprised of multiple
+clusters and roles it is highly recommended to use node names that
 include a cluster descriptor. In Warewulf, this is generally done by
 using a domain name (e.g. `n0000.cluster01`). Warewulf will
 automatically assume that the domain is the equivalent of the cluster
@@ -64,7 +64,7 @@ n0000                Cluster            --           --
 n0000                Profiles           --           default
 n0000                Discoverable       --           false
 n0000                Container          --           --
-n0000                Kernel             --           --
+n0000                KernelOverride     --           --
 n0000                KernelArgs         --           (quiet crashkernel=no vga=791 rootfstype=rootfs)
 n0000                RuntimeOverlay     --           (default)
 n0000                SystemOverlay      --           (default)
@@ -77,6 +77,7 @@ n0000                IpmiPort           --           --
 n0000                IpmiGateway        --           --
 n0000                IpmiUserName       --           --
 n0000                IpmiInterface      --           --
+n0000                IpmiWrite          --           --
 ```
 
 > note: The attribute values in parenthesis are default values and can
@@ -110,12 +111,16 @@ n0000                Container          --           rocky-8
 
 ### Configuring the Node's Kernel
 
+While the recommended method for assigning a kernel in 4.3 and beyond
+is to include it in the container / node image, a kernel can still be
+specified as an override at the node or profile.
+
 ```
-$ sudo wwctl node set --kernel $(uname -r) n0000
+$ sudo wwctl node set --kerneloverride $(uname -r) n0000
 Are you sure you want to modify 1 nodes(s): y
 
-$ sudo wwctl node list -a  n0000 | grep KernelVersion
-n0000                Kernel             --           4.18.0-305.3.1.el8_4.x86_64
+$ sudo wwctl node list -a n0000 | grep KernelOverride
+n0000                KernelOverride     --           4.18.0-305.3.1.el8_4.x86_64
 ```
 
 ### Configuring the Node's Network
@@ -154,22 +159,19 @@ n0000                IpmiPort           --           --
 n0000                IpmiGateway        --           --
 n0000                IpmiUserName       --           --
 n0000                IpmiInterface      --           --
-n0000                eth0:HWADDR        --           11:22:33:44:55:66
-n0000                eth0:IPADDR        --           10.0.2.1
-n0000                eth0:NETMASK       --           255.255.252.0
-n0000                eth0:GATEWAY       --           --
-n0000                eth0:TYPE          --           --
-n0000                eth0:DEFAULT       --           false
+n0000                default:DEVICE     --           eth0
+n0000                default:HWADDR     --           11:22:33:44:55:66
+n0000                default:IPADDR     --           10.0.2.1
+n0000                default:NETMASK    --           255.255.252.0
+n0000                default:GATEWAY    --           --
+n0000                default:TYPE       --           --
+n0000                default:DEFAULT    --           false
 ```
 
 ## Un-setting Node Attributes
 
-While we have a `set` command we do not have an `unset` command
-(however as of the time of this writing there is a [GitHub
-issue](https://github.com/hpcng/warewulf/issues/35) requesting this).
-
-If you wish to `unset` a particular value you have to use the `UNDEF`
-value as we did with previous versions of Warewulf. For example:
+If you wish to `unset` a particular value, set the value to
+`UNDEF`. For example:
 
 ```
 $ sudo wwctl node set --cluster cluster01 n0000

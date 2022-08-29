@@ -10,30 +10,40 @@ primary configuration files needed by Warewulf.
 ## warewulf.conf
 
 The Warewulf configuration exists as follows in the current version of
-Warewulf (4.2.0):
+Warewulf (4.3.0):
 
 ```
-ipaddr: 10.0.0.1
-netmask: 255.255.252.0
+WW_INTERNAL: 43
+ipaddr: 192.168.200.1
+netmask: 255.255.255.0
+network: 192.168.200.0
 warewulf:
   port: 9873
-  secure: true
+  secure: false
   update interval: 60
+  autobuild overlays: true
+  host overlay: true
+  syslog: false
 dhcp:
   enabled: true
-  range start: 10.0.1.1
-  range end: 10.0.1.255
-  template: default
+  range start: 192.168.200.50
+  range end: 192.168.200.99
   systemd name: dhcpd
 tftp:
   enabled: true
-  tftproot: /var/lib/tftpboot
   systemd name: tftp
 nfs:
+  enabled: true
+  export paths:
+  - path: /home
+    export options: rw,sync
+    mount options: defaults
+    mount: true
+  - path: /opt
+    export options: ro,sync,no_root_squash
+    mount options: defaults
+    mount: false
   systemd name: nfs-server
-  exports:
-  - /home
-  - /var/warewulf
 ```
 
 Generally you can leave this file as is, as long as you set the
@@ -48,12 +58,10 @@ configurations:
   cluster's **PRIVATE** network and it must also match the host's
   subnet mask for the cluster's private interface.
 
-- `dhcp:range start`: This address must exist on the network defined
-  above. If it is outside of this scope, failures will occur. This is
-  where you want the DHCP range IP addressing to begin.
-
-- `dhcp:range end`: Same as the above, but this is where the DHCP
-  range will end.
+- `dhcp:range start` and `dhcp:range end`: This address range must
+  exist in the network defined above. If it is outside of this
+  network, failures will occur. This specifies the range of addresses
+  you want DHCP to use.
 
 > note: The network configuration listed above assumes the network
 > layout in the [Background](background.md) portion of the
@@ -62,10 +70,10 @@ configurations:
 The other configuration options are usually not touched, but they are
 explained as follows:
 
-- `enabled`: This disables Warewulf's control of an external
+- `*:enabled`: This disables Warewulf's control of an external
   service. This is useful if you want to manage that service directly.
 
-- `systemd name`: This is so Warewulf can control some of the host's
+- `*:systemd name`: This is so Warewulf can control some of the host's
   services. For the distributions that we've built and tested this on,
   these will require no changes.
 
@@ -82,14 +90,30 @@ explained as follows:
   necessary protection that the user's can not obtain this
   information.
 
-- `nfs:exports`: Warewulf will automatically set up the NFS exports if
-  you wish for it to do this.
+- `warewulf:update interval`: This defines the frequency (in seconds)
+  with which the Warewulf client on the compute node fetches overlay
+  updates.
+  
+- `warewulf:autobuild overlays`: This determines whether per-node
+  overlays will automatically be rebuilt, e.g., when an underlying
+  overlay is changed.
+  
+- `warewulf:host overlay`: This determines whether the special `host`
+  overlay is applied to the Warewulf server during configuration. (The
+  host overlay is used to configure the dependent services.)
+  
+- `warewulf:syslog`: This determines whether Warewulf server logs go
+  to syslog or are written directly to a log file. (e.g.,
+  `/var/log/warewulfd.log`)
+
+- `nfs:export paths`: Warewulf will automatically set up the NFS
+  exports if you wish for it to do this.
 
 ## nodes.conf
 
 The `nodes.conf` is the primary database file for all compute
 nodes. It is a flat text YAML configuration file that is managed by
-the `wwctl` command but some sites manage the compute nodes and
+the `wwctl` command, but some sites manage the compute nodes and
 infrastructure via configuration management. This file being flat text
 and very light weight makes management of the node configurations very
 easy no matter what your configuration paradigm is.
@@ -102,14 +126,7 @@ command.
 > first time you attempt to run `wwctl`, this file will be generated
 > if it does not exist already.
 
-## hosts.tmpl
-
-The `hosts.tmpl` is a _text/template_ file that can be used to rewrite
-the control node's `/etc/hosts` file with the command `wwctl configure
-hosts`.
-
 ## Directories
 
-There are two directories in the `/etc/warewulf/` directory, these are
-`ipxe` and `dhcp`. Both of these directories contain _text/templates_
-that are used by the Warewulf configuration process.
+The `/etc/warewulf/ipxe/` contains _text/templates_ that are used by
+the Warewulf configuration process to configure the `ipxe` service.
