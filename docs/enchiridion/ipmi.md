@@ -15,7 +15,7 @@ Here is a table outlining the fields on a Profile and Node level, along with the
 
 | Field         | Parameter       | Profile | Node    | Valid Values       | Default Value |
 | ------------- | --------------- | :-----: | :-----: | ------------------ | ------------- |
-| IpmiIpaddr    | --ipmi          |         | &check; |                    |               |
+| IpmiIpaddr    | --ipmiaddr      |         | &check; |                    |               |
 | IpmiNetmask   | --ipminetmask   | &check; | &check; |                    |               |
 | IpmiPort      | --ipmiport      | &check; | &check; |                    | 623           |
 | IpmiGateway   | --ipmigateway   | &check; | &check; |                    |               |
