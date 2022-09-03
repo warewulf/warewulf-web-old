@@ -133,15 +133,15 @@ Once you have created and modified your new `chroot()`, you can import it into W
 sudo wwctl container import /tmp/newroot containername
 ```
 
-### Building A Container Using Singularity
+### Building A Container Using Apptainer
 
-Singularity, a container platform for HPC and performance intensive applications, can also be used to create node containers for Warewulf. There are several Singularity container recipes in the `containers/Singularity/` directory and can be found on GitHub at [https://github.com/hpcng/warewulf/tree/main/containers/Singularity](https://github.com/hpcng/warewulf/tree/main/containers/Singularity).
+Apptainer, a container platform for HPC and performance intensive applications, can also be used to create node containers for Warewulf. There are several Apptainer container recipes in the `containers/Apptainer/` directory and can be found on GitHub at [https://github.com/hpcng/warewulf/tree/main/containers/Apptainer](https://github.com/hpcng/warewulf/tree/main/containers/Apptainer).
 
-You can use these as starting points and adding any additional steps you want in the `%post` section of the recipe file. Once you've done that, installing Singularity, building a container sandbox and importing into Warewulf can be done with the following steps:
+You can use these as starting points and adding any additional steps you want in the `%post` section of the recipe file. Once you've done that, installing Apptainer, building a container sandbox and importing into Warewulf can be done with the following steps:
 
 ```bash
 sudo yum install epel-release
-sudo yum install singularity
-sudo singularity build --sandbox /tmp/newroot /path/to/Singularity/recipe.def
+sudo yum install apptainer
+sudo apptainer build --sandbox /tmp/newroot /path/to/Apptainer/recipe.def
 sudo wwctl container import /tmp/newroot containername
 ```
